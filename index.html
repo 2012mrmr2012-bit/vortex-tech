@@ -154,14 +154,6 @@
                 font-size: 2rem;
             }
         }
-        /* ابحث عن نهاية الستايل وحط الكود ده قبله */
-.social-buttons {
-    display: flex;
-    flex-direction: column; /* يخليهم تحت بعض */
-    align-items: center;    /* يخليهم في النص */
-    gap: 15px;             /* يخلي مسافة 15 بكسل بين كل زر والتاني */
-    margin-top: 20px;       /* بيبعد الأزرار كلها عن الكلام اللي فوقها */
-}
 
 .btn, .facebook-btn {
     display: inline-block;
@@ -171,6 +163,20 @@
     color: white !important;
     font-weight: bold;
     transition: 0.3s;
+}
+        .social-buttons {
+    display: flex;
+    flex-direction: row;  /* دي اللي بتخليهم جنب بعض بدل تحت بعض */
+    justify-content: center; /* بيخلي الأزرار في نص الصفحة بالضبط */
+    align-items: center;
+    gap: 15px;            /* المسافة بين كل زرار والتاني */
+    margin-top: 20px;
+    flex-wrap: wrap;      /* عشان لو الشاشة صغيرة ينزلوا تحت بعض وميبوظوش الشكل */
+}
+
+/* تنسيق زرار التليجرام */
+.telegram-btn {
+    background-color: #0088cc; /* لون تليجرام الرسمي */
 }
     </style>
 </head>
@@ -189,6 +195,7 @@
         </a>
         <a href="https://www.facebook.com/profile.php?id=100084315263300" target="_blank" class="btn facebook-btn">تابعني على فيسبوك 🔵
         </a>
+        <a href="https://t.me/YOUR_USERNAME" target="_blank" class="btn telegram-btn">تليجرام ✈️</a>
     </div>
 </header>
     <main class="video-container" id="videoContainer">
@@ -249,6 +256,7 @@
 </body>
 
 </html>
+
 
 
 
