@@ -154,6 +154,24 @@
                 font-size: 2rem;
             }
         }
+        /* ابحث عن نهاية الستايل وحط الكود ده قبله */
+.social-buttons {
+    display: flex;
+    flex-direction: column; /* يخليهم تحت بعض */
+    align-items: center;    /* يخليهم في النص */
+    gap: 15px;             /* يخلي مسافة 15 بكسل بين كل زر والتاني */
+    margin-top: 20px;       /* بيبعد الأزرار كلها عن الكلام اللي فوقها */
+}
+
+.btn, .facebook-btn {
+    display: inline-block;
+    padding: 12px 25px;
+    border-radius: 50px;
+    text-decoration: none;
+    color: white !important;
+    font-weight: bold;
+    transition: 0.3s;
+}
     </style>
 </head>
 <body>
@@ -231,6 +249,7 @@
 </body>
 
 </html>
+
 
 
 
