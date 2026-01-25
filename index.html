@@ -50,17 +50,18 @@
     filter: brightness(1.1);
 }
 
-/* حاوية للأزرار لتكون في المنتصف */
-.social-buttons {
-    margin-top: 10px;
-    display: flex;
-    justify-content: center;
-    gap: 15px; /* المسافة بين الزرين */
-    flex-wrap: wrap; /* لجعلهم تحت بعض في الشاشات الصغيرة */
-}
 .facebook-btn {
+    display: inline-block;
+    padding: 12px 25px;
     background-color: #1877F2; /* لون فيسبوك الرسمي */
+    color: white !important;
+    text-decoration: none;
+    border-radius: 50px; /* هذا السطر هو الذي يجعل الزر بيضاوياً */
+    font-weight: bold;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
     box-shadow: 0 4px 15px rgba(24, 119, 242, 0.4);
+    border: none;
 }
 
 .facebook-btn:hover {
@@ -230,6 +231,7 @@
 </body>
 
 </html>
+
 
 
 
