@@ -196,22 +196,44 @@ body {
     transition: 0.3s; /* لجعل الانتقال ناعماً */
 }
 
-/* تنسيق الزر العائم */
-.theme-toggle {
-    position: fixed;
-    bottom: 20px;
-    left: 20px;
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    background: #0000FF;
-    color: white;
-    border: none;
-    cursor: pointer;
-    font-size: 1.5rem;
-    z-index: 1000;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-}
+/* 3. زر اللايت والدارك العائم */
+        .theme-toggle {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            background: #0000FF;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 1.6rem;
+            z-index: 1000;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+        }
+
+        /* 4. كروت الفيديوهات تستخدم المتغيرات */
+        .video-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+            max-width: 1400px;
+            margin: 40px auto;
+        }
+        
+        .video-card {
+            background-color: var(--card-bg);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 20px var(--btn-shadow);
+            transition: 0.3s;
+        }
+        
+        .video-player { width: 100%; aspect-ratio: 16/9; background: #000; }
+        .video-info { padding: 15px; }
+        .video-title { font-size: 1.4rem; margin-bottom: 8px; color: var(--text-color); }
+        .video-description { color: #888; font-size: 0.95rem; }
     </style>
 </head>
 <body>
@@ -281,36 +303,64 @@ body {
                 container.appendChild(card);
             });
         }
+<body id="mainBody">
 
-        // Initialize the app when page loads
-        document.addEventListener('DOMContentLoaded', () => {
-            createVideoCards();
-        });
-        const modeBtn = document.getElementById('modeBtn');
-const body = document.body;
-
-modeBtn.addEventListener('click', () => {
-    if (body.getAttribute('data-theme') === 'light') {
-        body.removeAttribute('data-theme');
-        modeBtn.innerText = '🌓';
-        localStorage.setItem('theme', 'dark');
-    } else {
-        body.setAttribute('data-theme', 'light');
-        modeBtn.innerText = '🌙';
-        localStorage.setItem('theme', 'light');
-    }
-});
-
-// حفظ الوضع عند تحديث الصفحة
-if (localStorage.getItem('theme') === 'light') {
-    body.setAttribute('data-theme', 'light');
-    modeBtn.innerText = '🌙';
-}
-    </script>
     <button class="theme-toggle" id="modeBtn">🌓</button>
+
+    <header>
+        <h1>معلومات تقنيه عصريه لجميع الاجهزه</h1>
+        <p>Click on any video to play</p>
+        
+        <div class="social-buttons">
+            <a href="https://youtube.com/@YOUR_CHANNEL" target="_blank" class="btn youtube-btn">يوتيوب ❤️</a>
+            <a href="https://www.facebook.com/profile.php?id=100084315263300" target="_blank" class="btn facebook-btn">فيسبوك 🔵</a>
+            <a href="https://t.me/YOUR_USER" target="_blank" class="btn telegram-btn">تليجرام ✈️</a>
+        </div>
+    </header>
+    
+    <main class="video-container" id="videoContainer"></main>
+
+    <script>
+        const videos = [
+            { src: "Sequence 01.mp4", title: "تهكير الويندوز", description: "شرح كامل لطرق الحماية" },
+            { src: "Sequence 01_2 (1).mp4", title: "تهكير العاب وبرامج", description: "كواليس تعديل البرامج" },
+            { src: "Sequence 01_1.mp4", title: "تنظيم ملفات الكمبيوتر", description: "أفضل طريقة للترتيب" }
+        ];
+
+        // كود تشغيل الوضع الليلي والنهاري بنجاح
+        const modeBtn = document.getElementById('modeBtn');
+        const body = document.getElementById('mainBody');
+
+        modeBtn.addEventListener('click', () => {
+            if (body.getAttribute('data-theme') === 'light') {
+                body.removeAttribute('data-theme');
+                modeBtn.innerText = '🌓';
+            } else {
+                body.setAttribute('data-theme', 'light');
+                modeBtn.innerText = '🌙';
+            }
+        });
+
+        function createVideoCards() {
+            const container = document.getElementById('videoContainer');
+            videos.forEach(video => {
+                const card = document.createElement('div');
+                card.className = 'video-card';
+                card.innerHTML = `
+                    <video class="video-player" controls><source src="${video.src}" type="video/mp4"></video>
+                    <div class="video-info">
+                        <h3 class="video-title">${video.title}</h3>
+                        <p class="video-description">${video.description}</p>
+                    </div>`;
+                container.appendChild(card);
+            });
+        }
+        createVideoCards();
+    </script>
 </body>
 
 </html>
+
 
 
 
