@@ -1,74 +1,24 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Video Gallery</title>
+    <title>Vortex Tech - معرض الفيديوهات</title>
     <link href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        /* تنسيق زر الاشتراك */
-.subscribe-btn {
-    display: inline-block;
-    margin-top: 15px;
-    padding: 12px 25px;
-    background-color: #ff0000; /* لون يوتيوب الأحمر */
-    color: white !important;
-    text-decoration: none;
-    border-radius: 50px;
-    font-weight: bold;
-    font-size: 1.1rem;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(255, 0, 0, 0.4);
-    border: none;
-    cursor: pointer;
-}
+        /* 1. تعريف المتغيرات للألوان */
+        :root {
+            --bg-color: #121212;
+            --text-color: #ffffff;
+            --card-bg: #1e1e1e;
+        }
 
-.subscribe-btn:hover {
-    background-color: #cc0000;
-    transform: translateY(-3px);
-    box-shadow: 0 6px 20px rgba(255, 0, 0, 0.6);
-}
-        /* تنسيق زر الإنستجرام */
-.instagram-btn {
-    display: inline-block;
-    margin-top: 15px;
-    margin-left: 10px; /* مسافة بين الزرين */
-    padding: 12px 25px;
-    background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
-    color: white !important;
-    text-decoration: none;
-    border-radius: 50px;
-    font-weight: bold;
-    font-size: 1.1rem;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(188, 24, 136, 0.3);
-}
+        [data-theme="light"] {
+            --bg-color: #ffffff;
+            --text-color: #121212;
+            --card-bg: #f0f0f0;
+        }
 
-.instagram-btn:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 6px 20px rgba(188, 24, 136, 0.5);
-    filter: brightness(1.1);
-}
-
-.facebook-btn {
-    display: inline-block;
-    padding: 12px 25px;
-    background-color: #1877F2; /* لون فيسبوك الرسمي */
-    color: white !important;
-    text-decoration: none;
-    border-radius: 50px; /* هذا السطر هو الذي يجعل الزر بيضاوياً */
-    font-weight: bold;
-    font-size: 1.1rem;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(24, 119, 242, 0.4);
-    border: none;
-}
-
-.facebook-btn:hover {
-    background-color: #166fe5;
-    transform: translateY(-3px);
-    box-shadow: 0 6px 20px rgba(24, 119, 242, 0.6);
-}
         * {
             margin: 0;
             padding: 0;
@@ -77,16 +27,13 @@
         
         body {
             font-family: 'Aref Ruqaa', Tahoma, Geneva, Verdana, sans-serif;
-            background: #121212;
-            color: white;
+            background-color: var(--bg-color);
+            color: var(--text-color);
             padding: 20px;
+            transition: 0.3s;
         }
-        
-        header {
-            text-align: center;
-            margin-bottom: 30px;
-            padding: 20px;
-        }
+
+        header { text-align: center; margin-bottom: 30px; padding: 20px; }
         
         h1 {
             font-size: 2.5rem;
@@ -95,7 +42,55 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
-        
+
+        /* تنسيق الأزرار */
+        .social-buttons {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 25px;
+            border-radius: 50px;
+            text-decoration: none;
+            color: white !important;
+            font-weight: bold;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+
+        .subscribe-btn { background-color: #ff0000; box-shadow: 0 4px 15px rgba(255, 0, 0, 0.4); }
+        .instagram-btn { background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #bc1888); box-shadow: 0 4px 15px rgba(188, 24, 136, 0.3); }
+        .facebook-btn { background-color: #1877F2; box-shadow: 0 4px 15px rgba(24, 119, 242, 0.4); }
+        .telegram-btn { background-color: #0088cc; box-shadow: 0 4px 15px rgba(0, 136, 204, 0.3); }
+
+        .btn:hover { transform: translateY(-3px); filter: brightness(1.1); }
+
+        /* زر اللايت والدارك العائم */
+        .theme-toggle {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: #0000FF;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 1.5rem;
+            z-index: 1000;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+
+        /* تنسيق الكروت */
         .video-container {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -105,201 +100,74 @@
         }
         
         .video-card {
-            background: #1e1e1e;
+            background: var(--card-bg);
             border-radius: 12px;
             overflow: hidden;
             box-shadow: 0 10px 20px rgba(0,0,0,0.3);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            transition: 0.3s;
         }
         
-        .video-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 30px rgba(0,0,0,0.4);
-        }
-        
-        .video-player {
-            width: 100%;
-            aspect-ratio: 16/9;
-            background: #000;
-        }
-        
-        .video-info {
-            padding: 15px;
-        }
-        
-        .video-title {
-            font-size: 1.2rem;
-            margin-bottom: 8px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-        
-        .video-description {
-            color: #aaa;
-            font-size: 0.95rem;
-            line-height: 1.4;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-        
-        @media (max-width: 768px) {
-            .video-container {
-                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            }
-            
-            h1 {
-                font-size: 2rem;
-            }
-        }
-
-.btn, .facebook-btn {
-    display: inline-block;
-    padding: 12px 25px;
-    border-radius: 50px;
-    text-decoration: none;
-    color: white !important;
-    font-weight: bold;
-    transition: 0.3s;
-}
-        .social-buttons {
-    display: flex;
-    flex-direction: row;  /* دي اللي بتخليهم جنب بعض بدل تحت بعض */
-    justify-content: center; /* بيخلي الأزرار في نص الصفحة بالضبط */
-    align-items: center;
-    gap: 15px;            /* المسافة بين كل زرار والتاني */
-    margin-top: 20px;
-    flex-wrap: wrap;      /* عشان لو الشاشة صغيرة ينزلوا تحت بعض وميبوظوش الشكل */
-}
-
-/* تنسيق زرار التليجرام */
-.telegram-btn {
-    background-color: #0088cc; /* لون تليجرام الرسمي */
-}
-        :root {
-    --bg-color: #121212;
-    --text-color: white;
-    --card-bg: #1e1e1e;
-}
-
-[data-theme="light"] {
-    --bg-color: #ffffff;
-    --text-color: #121212;
-    --card-bg: #f0f0f0;
-}
-
-body {
-    background-color: var(--bg-color);
-    color: var(--text-color);
-    transition: 0.3s; /* لجعل الانتقال ناعماً */
-}
-
+        .video-player { width: 100%; aspect-ratio: 16/9; background: #000; }
+        .video-info { padding: 15px; }
+        .video-title { font-size: 1.2rem; margin-bottom: 8px; color: var(--text-color); }
+        .video-description { color: #aaa; font-size: 0.95rem; }
+    </style>
 </head>
-<body>
-<header>
-    <h1>معلومات تقنيه حصريه لجميع الاجهزه</h1>
-    <p>Click on any video to play</p>
-    
-    <div class="social-buttons">
-        <a href="https://www.youtube.com/@vo3tex-tech?sub_confirmation=1" target="_blank" class="subscribe-btn">
-            إشترك في القناة ❤️
-        </a>
-
-        <a href="https://www.instagram.com/vo3tex_tech" target="_blank" class="instagram-btn">
-            تابعني على إنستجرام 📸
-        </a>
-        <a href="https://www.facebook.com/profile.php?id=100084315263300" target="_blank" class="btn facebook-btn">تابعني على فيسبوك 🔵
-        </a>
-        <a href="https://t.me/vo3textech" target="_blank" class="btn telegram-btn">تليجرام ✈️</a>
-    </div>
-</header>
-    <main class="video-container" id="videoContainer">
-        <!-- Videos will be dynamically inserted here -->
-    </main>
-
-    <script>
-        // Replace this array with your own video information
-        const videos = [
-            {
-                src: "Sequence 01.mp4",
-                title: "تهكير الويندوز",
-                description: "Exploring the beautiful Rocky Mountains during summer"
-            },
-            {
-                src: "Sequence 01_2 (1).mp4",
-                title: "تهكير العاب وبرامج",
-                description: "Capturing the perfect sunset at Malibu Beach"
-            },
-            {
-                src: "Sequence 01_1.mp4",
-                title: "تنظيم ملفات الكمبيوتر",
-                description: "Night tour through downtown Tokyo"
-            }
-
-
-            // Add more videos following this format
-        ];
-
-        // Function to create video cards
-        function createVideoCards() {
-            const container = document.getElementById('videoContainer');
-            
-            videos.forEach(video => {
-                const card = document.createElement('div');
-                card.className = 'video-card';
-                
-                card.innerHTML = `
-                    <video class="video-player" controls>
-                        <source src="${video.src}" type="video/mp4">
-                        Your browser does not support the video tag.
-                    </video>
-                    <div class="video-info">
-                        <h3 class="video-title">${video.title}</h3>
-                        <p class="video-description">${video.description}</p>
-                    </div>
-                `;
-                
-                container.appendChild(card);
-            });
-        }
 <body id="mainBody">
 
     <button class="theme-toggle" id="modeBtn">🌓</button>
 
     <header>
-        <h1>معلومات تقنيه عصريه لجميع الاجهزه</h1>
+        <h1>معلومات تقنيه حصريه لجميع الاجهزه</h1>
         <p>Click on any video to play</p>
         
         <div class="social-buttons">
-            <a href="https://youtube.com/@YOUR_CHANNEL" target="_blank" class="btn youtube-btn">يوتيوب ❤️</a>
-            <a href="https://www.facebook.com/profile.php?id=100084315263300" target="_blank" class="btn facebook-btn">فيسبوك 🔵</a>
-            <a href="https://t.me/YOUR_USER" target="_blank" class="btn telegram-btn">تليجرام ✈️</a>
+            <a href="https://www.youtube.com/@vo3tex-tech?sub_confirmation=1" target="_blank" class="btn subscribe-btn">إشترك في القناة ❤️</a>
+            <a href="https://www.instagram.com/vo3tex_tech" target="_blank" class="btn instagram-btn">تابعنا علي إنستجرام 📸</a>
+            <a href="https://www.facebook.com/profile.php?id=100084315263300" target="_blank" class="btn facebook-btn">تابعنا علي فيسبوك🔵</a>
+            <a href="https://t.me/vo3textech" target="_blank" class="btn telegram-btn">تابعنا علي تليجرام ✈️</a>
         </div>
     </header>
+
+    <main class="video-container" id="videoContainer"></main>
+
+    <script>
+        const videos = [
+            { src: "Sequence 01.mp4", title: "تهكير الويندوز", description: "شرح كامل لطرق الحماية" },
+            { src: "Sequence 01_2 (1).mp4", title: "تهكير العاب وبرامج", description: "كواليس تعديل البرامج" },
+            { src: "Sequence 01_1.mp4", title: "تنظيم ملفات الكمبيوتر", description: "أفضل طريقة للترتيب" }
+        ];
+
+        // إنشاء كروت الفيديوهات
+        function createVideoCards() {
+            const container = document.getElementById('videoContainer');
+            videos.forEach(video => {
+                const card = document.createElement('div');
+                card.className = 'video-card';
+                card.innerHTML = `
+                    <video class="video-player" controls><source src="${video.src}" type="video/mp4"></video>
+                    <div class="video-info">
+                        <h3 class="video-title">${video.title}</h3>
+                        <p class="video-description">${video.description}</p>
+                    </div>`;
+                container.appendChild(card);
+            });
+        }
+        createVideoCards();
+
+        // كود تشغيل اللايت والدارك مود
+        const modeBtn = document.getElementById('modeBtn');
+        const body = document.getElementById('mainBody');
+
+        modeBtn.addEventListener('click', () => {
+            if (body.getAttribute('data-theme') === 'light') {
+                body.removeAttribute('data-theme');
+                modeBtn.innerText = '🌓';
+            } else {
+                body.setAttribute('data-theme', 'light');
+                modeBtn.innerText = '🌙';
+            }
+        });
+    </script>
 </body>
-
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
