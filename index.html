@@ -93,11 +93,14 @@
     </style>
 </head>
 <body>
-    <header>
-        <h1> جميع الفديوهات المحظوره</h1>
+   <header>
+        <h1>جميع الفيديوهات المحظورة</h1>
         <p>Click on any video to play</p>
+        
+        <a href="https://www.youtube.com/@YOUR_CHANNEL_NAME?sub_confirmation=1" target="_blank" class="subscribe-btn">
+             إشترك في القناة الآن ❤️
+        </a>
     </header>
-    
     <main class="video-container" id="videoContainer">
         <!-- Videos will be dynamically inserted here -->
     </main>
@@ -120,6 +123,29 @@
                 title: "تنظيم ملفات الكمبيوتر",
                 description: "Night tour through downtown Tokyo"
             }
+
+            .subscribe-btn {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 12px 25px;
+            background-color: #ff0000; /* لون يوتيوب */
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: bold;
+            transition: background 0.3s, transform 0.2s;
+            box-shadow: 0 4px 15px rgba(255, 0, 0, 0.3);
+        }
+
+        .subscribe-btn:hover {
+            background-color: #cc0000;
+            transform: scale(1.05);
+        }
+
+        .subscribe-btn i {
+            margin-right: 8px;
+        }
+        
             // Add more videos following this format
         ];
 
@@ -154,6 +180,7 @@
 </body>
 
 </html>
+
 
 
 
