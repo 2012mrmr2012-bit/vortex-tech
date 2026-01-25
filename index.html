@@ -27,6 +27,36 @@
     transform: translateY(-3px);
     box-shadow: 0 6px 20px rgba(255, 0, 0, 0.6);
 }
+        /* تنسيق زر الإنستجرام */
+.instagram-btn {
+    display: inline-block;
+    margin-top: 15px;
+    margin-left: 10px; /* مسافة بين الزرين */
+    padding: 12px 25px;
+    background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+    color: white !important;
+    text-decoration: none;
+    border-radius: 50px;
+    font-weight: bold;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(188, 24, 136, 0.3);
+}
+
+.instagram-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(188, 24, 136, 0.5);
+    filter: brightness(1.1);
+}
+
+/* حاوية للأزرار لتكون في المنتصف */
+.social-buttons {
+    margin-top: 10px;
+    display: flex;
+    justify-content: center;
+    gap: 15px; /* المسافة بين الزرين */
+    flex-wrap: wrap; /* لجعلهم تحت بعض في الشاشات الصغيرة */
+}
         * {
             margin: 0;
             padding: 0;
@@ -115,14 +145,20 @@
     </style>
 </head>
 <body>
-   <header>
-        <h1>جميع الفيديوهات المحظورة</h1>
-        <p>Click on any video to play</p>
-        
-        <a href="https://https://youtube.com/@vo3tex-tech?si=W-7uFguimB0oK0j9?sub_confirmation=1" target="_blank" class="subscribe-btn">
-             إشترك في القناة الآن ❤️
+<header>
+    <h1> جميع الفديوهات المحظوره</h1>
+    <p>Click on any video to play</p>
+    
+    <div class="social-buttons">
+        <a href="https://www.youtube.com/@vo3tex-tech?sub_confirmation=1" target="_blank" class="subscribe-btn">
+            إشترك في القناة ❤️
         </a>
-    </header>
+
+        <a href="https://www.instagram.com/vo3tex_tech" target="_blank" class="instagram-btn">
+            تابعني على إنستجرام 📸
+        </a>
+    </div>
+</header>
     <main class="video-container" id="videoContainer">
         <!-- Videos will be dynamically inserted here -->
     </main>
@@ -181,6 +217,7 @@
 </body>
 
 </html>
+
 
 
 
