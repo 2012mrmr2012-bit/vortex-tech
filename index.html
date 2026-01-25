@@ -58,18 +58,15 @@
     gap: 15px; /* المسافة بين الزرين */
     flex-wrap: wrap; /* لجعلهم تحت بعض في الشاشات الصغيرة */
 }
-        /* تنسيق زر فيسبوك */
 .facebook-btn {
     background-color: #1877F2; /* لون فيسبوك الرسمي */
+    box-shadow: 0 4px 15px rgba(24, 119, 242, 0.4);
 }
 
-/* تعديل بسيط للتأكد من تناسق الأزرار الثلاثة */
-.social-buttons {
-    display: flex;
-    justify-content: center;
-    gap: 12px;
-    margin-top: 20px;
-    flex-wrap: wrap; /* لترتيبهم في الموبايل */
+.facebook-btn:hover {
+    background-color: #166fe5;
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(24, 119, 242, 0.6);
 }
         * {
             margin: 0;
@@ -233,6 +230,7 @@
 </body>
 
 </html>
+
 
 
 
