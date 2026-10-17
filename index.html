@@ -59,8 +59,7 @@ function render() {
     if (v.type === 'youtube') { const im = document.createElement('img'); im.loading = 'lazy'; im.alt = ''; im.src = 'https://i.ytimg.com/vi/' + encodeURIComponent(v.yt) + '/hqdefault.jpg'; t.appendChild(im); t.insertAdjacentHTML('beforeend', playIcon); }
     else if (v.thumb && v.type !== 'image') { const im = document.createElement('img'); im.loading = 'lazy'; im.alt = ''; im.src = 'thumbs/' + encodeURIComponent(v.thumb); t.appendChild(im); if (v.type === 'file') t.insertAdjacentHTML('beforeend', playIcon); }
     else if (v.type === 'file') { const vd = document.createElement('video'); vd.preload = 'metadata'; vd.muted = true; vd.playsInline = true; vd.src = 'videos/' + encodeURIComponent(v.file) + '#t=0.5'; t.appendChild(vd); t.insertAdjacentHTML('beforeend', playIcon); }
-    else if (v.type === 'post') { if (v.thumb) { const im = document.createElement('img'); im.className = 'full'; im.alt = ''; im.src = 'thumbs/' + encodeURIComponent(v.thumb); m.appendChild(im); } const d = document.createElement('div'); d.className = 'postbody'; d.textContent = v.body || ''; m.appendChild(d); }
-  else if (v.type === 'image') { const im = document.createElement('img'); im.loading = 'lazy'; im.alt = v.title; im.src = 'images/' + encodeURIComponent(v.file); t.appendChild(im); }
+    else if (v.type === 'image') { const im = document.createElement('img'); im.loading = 'lazy'; im.alt = v.title; im.src = 'images/' + encodeURIComponent(v.file); t.appendChild(im); }
     else if (v.type === 'book') { const d = document.createElement('div'); d.className = 'cover bk'; d.innerHTML = '📚<small>PDF</small>'; t.appendChild(d); }
     else if (v.type === 'post') { const d = document.createElement('div'); d.className = 'cover pt'; d.textContent = '📝'; t.appendChild(d); }
     else { const d = document.createElement('div'); d.className = 'cover ln'; d.innerHTML = '<span></span><small></small>'; d.firstChild.textContent = icon(v.url); d.lastChild.textContent = host(v.url); t.appendChild(d); }
@@ -76,6 +75,7 @@ function open_(v) {
 function openPlayer(v) {
   const m = $('pm'); m.innerHTML = '';
   if (v.type === 'youtube') { const f = document.createElement('iframe'); f.allow = 'autoplay; fullscreen; picture-in-picture'; f.allowFullscreen = true; f.src = 'https://www.youtube-nocookie.com/embed/' + encodeURIComponent(v.yt) + '?autoplay=1&rel=0'; m.appendChild(f); }
+  else if (v.type === 'post') { if (v.thumb) { const im = document.createElement('img'); im.className = 'full'; im.alt = ''; im.src = 'thumbs/' + encodeURIComponent(v.thumb); m.appendChild(im); } const d = document.createElement('div'); d.className = 'postbody'; d.textContent = v.body || ''; m.appendChild(d); }
   else if (v.type === 'image') { const im = document.createElement('img'); im.className = 'full'; im.alt = v.title; im.src = 'images/' + encodeURIComponent(v.file); m.appendChild(im); }
   else { const p = document.createElement('video'); p.controls = true; p.playsInline = true; p.autoplay = true; p.src = 'videos/' + encodeURIComponent(v.file); m.appendChild(p); }
   $('pt').textContent = v.title; $('pd').textContent = v.type === 'post' ? '' : (v.description || ''); $('player').classList.add('open');
