@@ -78,3 +78,5 @@ details .f{margin-top:12px}
 .postbody{padding:20px 24px;white-space:pre-wrap;line-height:2.1;font-size:1.1rem;word-break:break-word}
 .cover.pt{background:linear-gradient(135deg,#134e5e,#71b280)}
 #ab{min-height:160px}
+.thumb canvas{width:100%;height:100%;object-fit:cover;display:block;transition:transform .5s}
+.card:hover .thumb canvas{transform:scale(1.08)}

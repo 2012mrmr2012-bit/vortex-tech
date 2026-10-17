@@ -45,6 +45,11 @@ function chips() {
     b.onclick = () => { cat = k; chips(); render(); }; c.appendChild(b);
   });
 }
+function liveThumb(t, src) {
+  const v = document.createElement('video'); v.preload = 'metadata'; v.muted = true; v.playsInline = true; v.src = src; t.appendChild(v);
+  v.addEventListener('loadedmetadata', () => { const d = v.duration; v.currentTime = isFinite(d) && d > 0 ? Math.min(2, Math.max(0.1, d * .1)) : 0.1; });
+  v.addEventListener('seeked', () => setTimeout(() => { try { if (!v.videoWidth) return; const w = Math.min(v.videoWidth, 640), h = Math.round(v.videoHeight * w / v.videoWidth), c = document.createElement('canvas'); c.width = w; c.height = h; c.getContext('2d').drawImage(v, 0, 0, w, h); t.replaceChild(c, v); } catch (e) {} }, 150), { once: true });
+}
 function render() {
   const term = $('q').value.trim().toLowerCase(), g = $('grid'); g.innerHTML = '';
   const list = videos.filter(v => (cat === 'all' || grp(v) === cat) && (v.title + ' ' + (v.description || '')).toLowerCase().includes(term));
@@ -58,7 +63,7 @@ function render() {
     const playIcon = '<div class="play"><span>▶</span></div>';
     if (v.type === 'youtube') { const im = document.createElement('img'); im.loading = 'lazy'; im.alt = ''; im.src = 'https://i.ytimg.com/vi/' + encodeURIComponent(v.yt) + '/hqdefault.jpg'; t.appendChild(im); t.insertAdjacentHTML('beforeend', playIcon); }
     else if (v.thumb && v.type !== 'image') { const im = document.createElement('img'); im.loading = 'lazy'; im.alt = ''; im.src = 'thumbs/' + encodeURIComponent(v.thumb); t.appendChild(im); if (v.type === 'file') t.insertAdjacentHTML('beforeend', playIcon); }
-    else if (v.type === 'file') { const vd = document.createElement('video'); vd.preload = 'metadata'; vd.muted = true; vd.playsInline = true; vd.src = 'videos/' + encodeURIComponent(v.file) + '#t=0.5'; t.appendChild(vd); t.insertAdjacentHTML('beforeend', playIcon); }
+    else if (v.type === 'file') { liveThumb(t, 'videos/' + encodeURIComponent(v.file)); t.insertAdjacentHTML('beforeend', playIcon); }
     else if (v.type === 'image') { const im = document.createElement('img'); im.loading = 'lazy'; im.alt = v.title; im.src = 'images/' + encodeURIComponent(v.file); t.appendChild(im); }
     else if (v.type === 'book') { const d = document.createElement('div'); d.className = 'cover bk'; d.innerHTML = '📚<small>PDF</small>'; t.appendChild(d); }
     else if (v.type === 'post') { const d = document.createElement('div'); d.className = 'cover pt'; d.textContent = '📝'; t.appendChild(d); }
