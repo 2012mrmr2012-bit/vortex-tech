@@ -4,78 +4,195 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex">
-<title>لوحة الأدمن - Vortex Tech</title>
+<title>لوحة التحكم - Vortex Tech</title>
 <link href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@400;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
+<style>
+.a-wrap{position:relative;z-index:1;max-width:1200px;margin:0 auto;padding:20px 16px 60px}
+.a-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:20px}
+.a-brand{display:flex;align-items:center;gap:12px}
+.a-logo{width:44px;height:44px;border-radius:14px;background:linear-gradient(135deg,var(--accent2),var(--accent));display:grid;place-items:center;font-size:1.4rem;color:#fff}
+.a-brand h1{font-size:1.4rem;-webkit-text-fill-color:var(--text);background:none;animation:none;margin:0}
+.a-brand small{color:var(--muted)}
+.a-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.a-pill{display:inline-flex;align-items:center;gap:8px;padding:7px 14px;border-radius:50px;border:1px solid var(--line);background:var(--card);font-size:.9rem;color:var(--muted)}
+.a-pill i{width:9px;height:9px;border-radius:50%;background:#888}
+.a-pill.ok i{background:#22c55e;box-shadow:0 0 8px #22c55e}.a-pill.ok{color:var(--text)}
+.a-pill.bad i{background:#ef4444}
+.a-btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:10px 18px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--text);font-family:inherit;font-size:1rem;cursor:pointer;text-decoration:none;transition:.2s}
+.a-btn:hover{transform:translateY(-2px);border-color:var(--accent)}
+.a-btn.pri{background:linear-gradient(135deg,var(--accent),#6a4bff);border-color:transparent;color:#fff}
+.a-btn.dng{color:#ff6b6b}
+.a-btn.sm{padding:6px 12px;font-size:.9rem;border-radius:10px}
+.a-btn:disabled{opacity:.55;cursor:wait;transform:none}
+.a-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px;margin-bottom:20px}
+.a-stat{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px 16px}
+.a-stat b{display:block;font-size:1.8rem;background:linear-gradient(90deg,var(--accent2),var(--accent));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.a-stat span{color:var(--muted);font-size:.95rem}
+.a-cols{display:grid;grid-template-columns:minmax(0,420px) minmax(0,1fr);gap:20px;align-items:start}
+@media(max-width:900px){.a-cols{grid-template-columns:1fr}}
+.a-card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:20px}
+.a-card h2{font-size:1.2rem;margin-bottom:14px}
+.a-tabs{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-bottom:14px}
+.a-tab{display:flex;flex-direction:column;align-items:center;gap:2px;padding:8px 2px;border-radius:12px;border:1px solid var(--line);background:var(--bg);color:var(--muted);font-family:inherit;font-size:.8rem;cursor:pointer;transition:.2s}
+.a-tab span{font-size:1.3rem}
+.a-tab.on{background:rgba(59,91,255,.18);border-color:var(--accent);color:var(--text)}
+.a-in,.a-ta{width:100%;padding:11px 14px;margin-bottom:10px;border-radius:12px;border:1px solid var(--line);background:var(--bg);color:var(--text);font-family:inherit;font-size:1rem;outline:0}
+.a-in:focus,.a-ta:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(59,91,255,.2)}
+.a-ta{resize:vertical;min-height:80px}
+.a-drop{display:flex;flex-direction:column;align-items:center;gap:4px;padding:22px 12px;margin-bottom:10px;border:2px dashed var(--line);border-radius:16px;cursor:pointer;text-align:center;color:var(--muted);transition:.2s}
+.a-drop:hover,.a-drop.over{border-color:var(--accent);background:rgba(59,91,255,.08);color:var(--text)}
+.a-drop .ic{font-size:2rem}
+.a-drop img{max-width:100%;max-height:140px;border-radius:10px;margin-top:8px}
+.a-mini{display:flex;align-items:center;gap:8px;padding:9px 12px;margin-bottom:10px;border:1px solid var(--line);border-radius:12px;cursor:pointer;color:var(--muted);font-size:.95rem}
+.a-mini:hover{border-color:var(--accent)}
+.a-mini span{color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.a-hint{color:var(--muted);font-size:.88rem;margin-bottom:10px}
+.a-bar{height:6px;border-radius:6px;background:var(--line);overflow:hidden;margin:12px 0 4px;display:none}
+.a-bar i{display:block;height:100%;width:40%;border-radius:6px;background:linear-gradient(90deg,var(--accent2),var(--accent));animation:slide 1.1s ease-in-out infinite alternate}
+@keyframes slide{from{margin-right:0}to{margin-right:60%}}
+.a-status{min-height:1.3em;color:var(--accent2);font-size:.92rem}
+.a-tools{display:flex;gap:8px;margin-bottom:12px}
+.a-tools .a-in{margin:0;flex:1}
+.a-tools select{width:auto;margin:0}
+.a-list{display:flex;flex-direction:column;gap:8px}
+.a-item{display:flex;align-items:center;gap:12px;padding:10px;border:1px solid var(--line);border-radius:14px;background:var(--bg);animation:fade .4s both}
+.a-th{width:78px;height:52px;border-radius:10px;background:linear-gradient(135deg,#1a2a6c,#3b5bff);flex:none;overflow:hidden;display:grid;place-items:center;font-size:1.5rem;color:#fff}
+.a-th img{width:100%;height:100%;object-fit:cover}
+.a-meta{flex:1;min-width:0}
+.a-meta b{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.a-meta small{color:var(--muted)}
+.a-empty{text-align:center;color:var(--muted);padding:34px 10px}
+.a-modal{position:fixed;inset:0;z-index:200;background:rgba(2,3,8,.8);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;padding:16px}
+.a-modal.open{display:flex;animation:fade .25s}
+.a-box{width:100%;max-width:480px;max-height:92vh;overflow:auto;background:var(--card);border:1px solid var(--line);border-radius:20px;padding:22px}
+.a-box h3{margin-bottom:12px}
+.a-row{display:flex;gap:8px;justify-content:flex-end;margin-top:6px}
+.a-box details{margin:4px 0 12px;border:1px solid var(--line);border-radius:12px;padding:8px 12px;font-size:.92rem;color:var(--muted)}
+.a-box ol{padding-right:20px;margin-top:6px;line-height:1.9}
+.a-toasts{position:fixed;bottom:18px;right:18px;left:18px;z-index:300;display:flex;flex-direction:column;align-items:center;gap:8px;pointer-events:none}
+.a-toast{background:var(--card);border:1px solid var(--line);border-right:4px solid var(--accent);padding:10px 18px;border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,.4);animation:fade .3s both;max-width:520px}
+.a-toast.ok{border-right-color:#22c55e}.a-toast.err{border-right-color:#ef4444}
+</style>
 </head>
 <body>
 <div class="orb o1"></div><div class="orb o2"></div>
-<div class="panel">
-  <div class="top"><h2>⚙️ لوحة الأدمن</h2><a class="link" href="index.html">الموقع</a></div>
-  <details id="set" open>
-    <summary>🔑 إعدادات GitHub (مرة واحدة)</summary>
-    <div class="f">
-      <input id="co" placeholder="اسم حسابك على GitHub (owner)">
-      <input id="cr" placeholder="اسم المستودع (repo)">
-      <input id="cb" placeholder="الفرع (branch)" value="main">
-      <input id="ct" type="password" placeholder="التوكن الشخصي (Token)">
-      <button class="btn tg" id="sv" style="justify-content:center">حفظ في المتصفح ده فقط</button>
+<div class="a-wrap">
+  <div class="a-head">
+    <div class="a-brand"><div class="a-logo">⚙️</div><div><h1>لوحة التحكم</h1><small>Vortex Tech</small></div></div>
+    <div class="a-actions">
+      <span class="a-pill" id="st"><i></i><em id="stT">غير متصل</em></span>
+      <button class="a-btn sm" id="setBtn">🔑 الإعدادات</button>
+      <a class="a-btn sm" href="index.html" target="_blank">🌐 الموقع</a>
     </div>
-  </details>
-  <div class="tabs" id="tabs"></div>
-  <div class="f">
-    <input id="yl" placeholder="اللينك">
-    <input type="file" id="af" style="display:none">
-    <textarea id="ab" rows="8" maxlength="20000" placeholder="اكتب المنشور هنا (ممكن يكون طويل)" style="display:none"></textarea>
-    <p class="hint" id="chh" style="display:none">صورة الغلاف / الثامنيل (اختياري). للفيديو لو سبتها فاضية بتتاخد لقطة من الفيديو تلقائياً.</p>
-    <input type="file" id="ac" accept="image/jpeg,image/png,image/webp" style="display:none">
-    <p class="hint" id="fh" style="display:none">الحد الأقصى المناسب 50 ميجا للملف. للفيديوهات الأكبر استخدم يوتيوب.</p>
-    <input id="at" placeholder="عنوان الفيديو" maxlength="120">
-    <textarea id="ad" rows="2" placeholder="وصف الفيديو" maxlength="300"></textarea>
   </div>
-  <button class="btn tg" id="up" style="width:100%;justify-content:center">إضافة</button>
-  <div class="msg" id="am"></div>
-  <div id="list"></div>
+
+  <div class="a-stats" id="stats"></div>
+
+  <div class="a-cols">
+    <section class="a-card">
+      <h2>➕ إضافة محتوى</h2>
+      <div class="a-tabs" id="tabs"></div>
+      <input class="a-in" id="at" placeholder="العنوان" maxlength="120">
+      <input class="a-in" id="yl" placeholder="لينك فيديو يوتيوب">
+      <textarea class="a-ta" id="ab" rows="7" maxlength="20000" placeholder="اكتب المنشور هنا (ممكن يكون طويل)"></textarea>
+      <textarea class="a-ta" id="ad" rows="2" maxlength="300" placeholder="وصف مختصر (اختياري)"></textarea>
+      <label class="a-drop" id="drop" for="af">
+        <div class="ic">⬆️</div><div id="dropT">اسحب الملف هنا أو اضغط للاختيار</div><small id="dropS"></small><img id="dprev" alt="" hidden>
+      </label>
+      <input type="file" id="af" hidden>
+      <label class="a-mini" id="cvr">🖼️ صورة غلاف / ثامنيل (اختياري) <span id="acn"></span><input type="file" id="ac" hidden accept="image/jpeg,image/png,image/webp"></label>
+      <p class="a-hint" id="hint">الحد الأقصى 50 ميجا للملف. للفيديوهات الكبيرة استخدم يوتيوب.</p>
+      <button class="a-btn pri" id="up" style="width:100%">إضافة ونشر</button>
+      <div class="a-bar" id="bar"><i></i></div>
+      <div class="a-status" id="am"></div>
+    </section>
+
+    <section class="a-card">
+      <h2>📚 المحتوى المنشور</h2>
+      <div class="a-tools">
+        <input class="a-in" id="sq" placeholder="🔍 بحث...">
+        <select class="a-in" id="sf"><option value="all">الكل</option><option value="video">فيديو</option><option value="image">صور</option><option value="book">كتب</option><option value="post">منشورات</option></select>
+      </div>
+      <div class="a-list" id="list"></div>
+    </section>
+  </div>
 </div>
+
+<div class="a-modal" id="setM"><div class="a-box">
+  <h3>🔑 إعدادات GitHub</h3>
+  <input class="a-in" id="co" placeholder="اسم حسابك على GitHub (owner)">
+  <input class="a-in" id="cr" placeholder="اسم المستودع (repo)">
+  <input class="a-in" id="cb" placeholder="الفرع (branch)" value="main">
+  <input class="a-in" id="ct" type="password" placeholder="التوكن الشخصي (Token)">
+  <details><summary>إزاي أعمل التوكن؟</summary><ol>
+    <li>GitHub ← Settings ← Developer settings</li>
+    <li>Personal access tokens ← Fine-grained tokens ← Generate</li>
+    <li>Repository access: المستودع ده بس</li>
+    <li>Permissions ← Contents: Read and write</li></ol></details>
+  <div class="a-row"><button class="a-btn dng sm" id="clr">مسح من المتصفح</button><button class="a-btn sm" id="setX">إلغاء</button><button class="a-btn pri sm" id="sv">حفظ واتصال</button></div>
+</div></div>
+
+<div class="a-modal" id="edM"><div class="a-box">
+  <h3>✏️ تعديل</h3>
+  <input class="a-in" id="et" placeholder="العنوان" maxlength="120">
+  <textarea class="a-ta" id="ed" rows="2" maxlength="300" placeholder="الوصف"></textarea>
+  <textarea class="a-ta" id="eb" rows="9" maxlength="20000" placeholder="نص المنشور"></textarea>
+  <div class="a-row"><button class="a-btn sm" id="edX">إلغاء</button><button class="a-btn pri sm" id="edS">حفظ التعديل</button></div>
+</div></div>
+
+<div class="a-modal" id="cfM"><div class="a-box">
+  <h3 id="cfT">تأكيد</h3><p id="cfP" style="color:var(--muted);margin-bottom:10px"></p>
+  <div class="a-row"><button class="a-btn sm" id="cfN">لا</button><button class="a-btn dng sm" id="cfY">نعم، احذف</button></div>
+</div></div>
+
+<div class="a-toasts" id="toasts"></div>
+
 <script>
 const $ = id => document.getElementById(id);
+try { const t = localStorage.getItem('vt-theme'); if (t) document.documentElement.setAttribute('data-theme', t); } catch (e) {}
 const MAX = 50 * 1024 * 1024;
-let mode = 'yt';
 const IMG = { 'image/jpeg': 'jpg', 'image/png': 'png', 'image/webp': 'webp', 'image/gif': 'gif' };
 const KINDS = {
-  yt: { label: '▶️ يوتيوب', ph: 'لينك فيديو يوتيوب' },
-  video: { label: '🎬 فيديو', dir: 'videos', type: 'file', types: { 'video/mp4': 'mp4', 'video/webm': 'webm' } },
-  image: { label: '🖼️ صورة', dir: 'images', type: 'image', types: IMG },
-  book: { label: '📚 كتاب PDF', dir: 'books', type: 'book', types: { 'application/pdf': 'pdf' } },
-  post: { label: '📝 منشور' }
+  yt:    { label: 'يوتيوب', ico: '▶️' },
+  video: { label: 'فيديو', ico: '🎬', dir: 'videos', type: 'file', types: { 'video/mp4': 'mp4', 'video/webm': 'webm' }, hint: 'mp4 أو webm' },
+  image: { label: 'صورة', ico: '🖼️', dir: 'images', type: 'image', types: IMG, hint: 'jpg أو png أو webp أو gif' },
+  book:  { label: 'كتاب', ico: '📚', dir: 'books', type: 'book', types: { 'application/pdf': 'pdf' }, hint: 'ملف PDF' },
+  post:  { label: 'منشور', ico: '📝' }
 };
 const DIR = { file: 'videos', image: 'images', book: 'books' };
-const ICO = { youtube: '▶️', file: '🎬', image: '🖼️', book: '📚', link: '🔗', post: '📝' };
+const TLAB = { youtube: 'يوتيوب', file: 'فيديو', image: 'صورة', book: 'كتاب', post: 'منشور', link: 'رابط' };
+const TICO = { youtube: '▶️', file: '🎬', image: '🖼️', book: '📚', post: '📝', link: '🔗' };
+const grp = v => v.type === 'youtube' || v.type === 'file' ? 'video' : v.type === 'link' ? 'post' : v.type;
+let mode = 'yt', items = [], editing = null;
+
+/* ---------- ui helpers ---------- */
+function toast(msg, kind) { const d = document.createElement('div'); d.className = 'a-toast ' + (kind || ''); d.textContent = msg; $('toasts').appendChild(d); setTimeout(() => d.remove(), kind === 'err' ? 7000 : 4000); }
+function busy(on, text) { $('bar').style.display = on ? 'block' : 'none'; $('up').disabled = on; if (text !== undefined) $('am').textContent = text; }
+function confirmBox(title, text) { return new Promise(res => { $('cfT').textContent = title; $('cfP').textContent = text; $('cfM').classList.add('open'); const end = v => { $('cfM').classList.remove('open'); res(v); }; $('cfY').onclick = () => end(true); $('cfN').onclick = () => end(false); }); }
+const size = n => n > 1048576 ? (n / 1048576).toFixed(1) + ' MB' : Math.round(n / 1024) + ' KB';
+function pill(state, text) { $('st').className = 'a-pill ' + state; $('stT').textContent = text; }
+
+/* ---------- settings ---------- */
 const cfg = () => { try { return JSON.parse(localStorage.getItem('vt-gh') || '{}'); } catch (e) { return {}; } };
-const say = t => $('am').textContent = t;
-function loadCfg() { const c = cfg(); $('co').value = c.owner || ''; $('cr').value = c.repo || ''; $('cb').value = c.branch || 'main'; $('ct').value = c.token || ''; $('set').open = !c.token; }
+function loadCfg() { const c = cfg(); $('co').value = c.owner || ''; $('cr').value = c.repo || ''; $('cb').value = c.branch || 'main'; $('ct').value = c.token || ''; }
+$('setBtn').onclick = () => { loadCfg(); $('setM').classList.add('open'); };
+$('setX').onclick = () => $('setM').classList.remove('open');
 $('sv').onclick = () => {
   const c = { owner: $('co').value.trim(), repo: $('cr').value.trim(), branch: $('cb').value.trim() || 'main', token: $('ct').value.trim() };
-  if (!c.owner || !c.repo || !c.token) return say('كمّل كل البيانات.');
-  try { localStorage.setItem('vt-gh', JSON.stringify(c)); } catch (e) { return say('المتصفح منع الحفظ.'); }
-  say('تم الحفظ ✅'); $('set').open = false; refresh();
+  if (!c.owner || !c.repo || !c.token) return toast('كمّل كل البيانات', 'err');
+  try { localStorage.setItem('vt-gh', JSON.stringify(c)); } catch (e) { return toast('المتصفح منع الحفظ', 'err'); }
+  $('setM').classList.remove('open'); refresh();
 };
-function setMode(m) {
-  mode = m; const K = KINDS[m];
-  document.querySelectorAll('.tab').forEach(b => b.classList.toggle('on', b.dataset.k === m));
-  $('yl').style.display = K.dir ? 'none' : ''; $('yl').placeholder = K.ph || '';
-  $('af').style.display = K.dir ? '' : 'none'; $('fh').style.display = K.dir ? '' : 'none';
-  const cv = ['video', 'book', 'post'].includes(m); $('ab').style.display = m === 'post' ? '' : 'none'; $('ac').style.display = cv ? '' : 'none'; $('chh').style.display = cv ? '' : 'none';
-  if (K.dir) $('af').accept = Object.keys(K.types).join(',');
-}
-Object.keys(KINDS).forEach(k => { const b = document.createElement('button'); b.className = 'tab'; b.dataset.k = k; b.textContent = KINDS[k].label; b.onclick = () => setMode(k); $('tabs').appendChild(b); });
+$('clr').onclick = () => { try { localStorage.removeItem('vt-gh'); } catch (e) {} loadCfg(); items = []; renderAll(); pill('', 'غير متصل'); toast('اتمسحت بيانات الاتصال من المتصفح ده'); };
 
+/* ---------- GitHub API ---------- */
 async function gh(method, path, body) {
   const c = cfg();
   const url = `https://api.github.com/repos/${c.owner}/${c.repo}/contents/${path}` + (method === 'GET' ? `?ref=${encodeURIComponent(c.branch)}&t=${Date.now()}` : '');
   const r = await fetch(url, { method, headers: { Authorization: 'Bearer ' + c.token, Accept: 'application/vnd.github+json' }, body: body ? JSON.stringify(body) : undefined });
   const d = await r.json().catch(() => ({}));
-  if (!r.ok) { const e = new Error(r.status === 401 ? 'التوكن غلط أو منتهي' : r.status === 404 && method !== 'GET' ? 'المستودع أو الفرع مش موجود، أو التوكن ملوش صلاحية Contents' : (d.message || r.status)); e.status = r.status; throw e; }
+  if (!r.ok) { const e = new Error(r.status === 401 ? 'التوكن غلط أو منتهي' : r.status === 403 ? 'التوكن ملوش صلاحية، أو وصلت للحد المسموح' : r.status === 404 && method !== 'GET' ? 'المستودع/الفرع مش موجود أو التوكن ملوش صلاحية Contents' : (d.message || r.status)); e.status = r.status; throw e; }
   return d;
 }
 const utf8b64 = s => btoa(Array.from(new TextEncoder().encode(s), b => String.fromCharCode(b)).join(''));
@@ -86,8 +203,8 @@ async function getList() {
 async function mutate(fn, msg) {
   for (let i = 0; i < 2; i++) {
     const { sha, list } = await getList(), next = fn(list);
-    try { await gh('PUT', 'videos.json', { message: msg, content: utf8b64(JSON.stringify(next, null, 1)), branch: cfg().branch, ...(sha ? { sha } : {}) }); return next; }
-    catch (e) { if (e.status !== 409 && e.status !== 422 || i) throw e; }
+    try { await gh('PUT', 'videos.json', { message: msg, content: utf8b64(JSON.stringify(next, null, 1)), branch: cfg().branch, ...(sha ? { sha } : {}) }); items = next; renderAll(); return next; }
+    catch (e) { if ((e.status !== 409 && e.status !== 422) || i) throw e; }
   }
 }
 const toB64 = b => new Promise((res, rej) => { const r = new FileReader(); r.onload = () => res(r.result.split(',')[1]); r.onerror = rej; r.readAsDataURL(b); });
@@ -96,6 +213,7 @@ async function putBlob(dir, blob, ext) {
   await gh('PUT', dir + '/' + name, { message: 'upload ' + name, content: await toB64(blob), branch: cfg().branch });
   return name;
 }
+async function delFile(path) { try { const f = await gh('GET', path); await gh('DELETE', path, { message: 'delete ' + path, sha: f.sha, branch: cfg().branch }); } catch (e) {} }
 function frameThumb(src) {
   return new Promise(res => {
     const isBlob = typeof src !== 'string', u = isBlob ? URL.createObjectURL(src) : src, v = document.createElement('video');
@@ -119,37 +237,102 @@ function frameThumb(src) {
 }
 const ytId = u => { const m = u.match(/(?:youtu\.be\/|v=|shorts\/|embed\/|live\/)([A-Za-z0-9_-]{11})/); return m ? m[1] : null; };
 
+/* ---------- render ---------- */
 async function refresh() {
-  const l = $('list'); l.innerHTML = '';
-  if (!cfg().token) return;
-  try { const { list } = await getList(); render(list); } catch (e) { say(e.message); }
+  if (!cfg().token) { pill('', 'غير متصل'); $('setM').classList.add('open'); return; }
+  pill('', 'جاري الاتصال...');
+  try { const { list } = await getList(); items = list; renderAll(); pill('ok', 'متصل: ' + cfg().owner + '/' + cfg().repo); }
+  catch (e) { pill('bad', 'فشل الاتصال'); toast(e.message, 'err'); }
 }
-function render(list) {
-  const l = $('list'); l.innerHTML = '';
+function renderAll() {
+  const c = k => items.filter(v => grp(v) === k).length;
+  $('stats').innerHTML = '';
+  [['الإجمالي', items.length], ['🎬 فيديو', c('video')], ['🖼️ صور', c('image')], ['📚 كتب', c('book')], ['📝 منشورات', c('post')]].forEach(([l, n]) => {
+    const d = document.createElement('div'); d.className = 'a-stat'; d.innerHTML = '<b></b><span></span>'; d.firstChild.textContent = n; d.lastChild.textContent = l; $('stats').appendChild(d);
+  });
+  renderList();
+}
+function thumbUrl(v) {
+  if (v.type === 'youtube') return 'https://i.ytimg.com/vi/' + encodeURIComponent(v.yt) + '/default.jpg';
+  if (v.type === 'image') return 'images/' + encodeURIComponent(v.file);
+  if (v.thumb) return 'thumbs/' + encodeURIComponent(v.thumb);
+  return '';
+}
+function renderList() {
+  const l = $('list'), q = $('sq').value.trim().toLowerCase(), f = $('sf').value; l.innerHTML = '';
+  const list = items.filter(v => (f === 'all' || grp(v) === f) && (v.title + ' ' + (v.description || '') + ' ' + (v.body || '')).toLowerCase().includes(q));
+  if (!list.length) { const e = document.createElement('div'); e.className = 'a-empty'; e.textContent = items.length ? 'مفيش نتائج' : 'لسه مفيش محتوى، ابدأ بإضافة أول عنصر ✨'; l.appendChild(e); return; }
   list.forEach(v => {
-    const r = document.createElement('div'); r.className = 'row';
-    const s = document.createElement('span'); s.textContent = (ICO[v.type] || '📄') + ' ' + v.title;
-    const b = document.createElement('button'); b.className = 'del'; b.textContent = 'حذف';
-    b.onclick = async () => {
-      if (!confirm('تحذف "' + v.title + '"؟')) return;
-      b.disabled = true; say('جاري الحذف...');
-      try {
-        const n = await mutate(a => a.filter(x => x.id !== v.id), 'حذف: ' + v.title);
-        if (DIR[v.type]) { try { const p = DIR[v.type] + '/' + v.file, f = await gh('GET', p); await gh('DELETE', p, { message: 'delete ' + v.file, sha: f.sha, branch: cfg().branch }); } catch (e) {} }
-        if (v.thumb) { try { const p = 'thumbs/' + v.thumb, f = await gh('GET', p); await gh('DELETE', p, { message: 'delete ' + v.thumb, sha: f.sha, branch: cfg().branch }); } catch (e) {} }
-        render(n); say('تم الحذف ✅ (الموقع بيتحدث خلال دقيقة تقريبًا)');
-      } catch (e) { b.disabled = false; say(e.message); }
-    };
-    r.append(s, b); l.appendChild(r);
+    const r = document.createElement('div'); r.className = 'a-item';
+    const th = document.createElement('div'); th.className = 'a-th'; th.textContent = TICO[v.type] || '📄';
+    const u = thumbUrl(v); if (u) { const im = document.createElement('img'); im.alt = ''; im.loading = 'lazy'; im.src = u; im.onload = () => { th.textContent = ''; th.appendChild(im); }; }
+    const m = document.createElement('div'); m.className = 'a-meta';
+    const b = document.createElement('b'); b.textContent = v.title;
+    const s = document.createElement('small'); s.textContent = (TLAB[v.type] || '') + (v.date ? ' · ' + new Date(v.date).toLocaleDateString('ar-EG') : ''); m.append(b, s);
+    const ed = document.createElement('button'); ed.className = 'a-btn sm'; ed.textContent = '✏️'; ed.title = 'تعديل'; ed.onclick = () => openEdit(v);
+    const dl = document.createElement('button'); dl.className = 'a-btn sm dng'; dl.textContent = '🗑️'; dl.title = 'حذف'; dl.onclick = () => removeItem(v, dl);
+    r.append(th, m, ed, dl); l.appendChild(r);
   });
 }
-$('up').onclick = async () => {
-  if (!cfg().token) return say('احفظ إعدادات GitHub الأول.');
-  const title = $('at').value.trim(); if (!title) return say('اكتب عنوان.');
-  const item = { id: Math.random().toString(36).slice(2, 10), title, description: $('ad').value.trim(), date: Date.now() };
-  $('up').disabled = true;
+$('sq').oninput = renderList; $('sf').onchange = renderList;
+
+/* ---------- edit / delete ---------- */
+function openEdit(v) {
+  editing = v; $('et').value = v.title; $('ed').value = v.description || ''; $('eb').value = v.body || '';
+  $('ed').style.display = v.type === 'post' ? 'none' : ''; $('eb').style.display = v.type === 'post' ? '' : 'none';
+  $('edM').classList.add('open');
+}
+$('edX').onclick = () => $('edM').classList.remove('open');
+$('edS').onclick = async () => {
+  const t = $('et').value.trim(); if (!t) return toast('العنوان مطلوب', 'err');
+  const id = editing.id, isPost = editing.type === 'post', d = $('ed').value.trim(), b = $('eb').value.trim();
+  if (isPost && !b) return toast('نص المنشور مطلوب', 'err');
+  $('edS').disabled = true;
+  try { await mutate(a => a.map(x => x.id === id ? { ...x, title: t, ...(isPost ? { body: b } : { description: d }) } : x), 'تعديل: ' + t); $('edM').classList.remove('open'); toast('تم حفظ التعديل ✅ (ظاهر على الموقع بعد حوالي دقيقة)', 'ok'); }
+  catch (e) { toast(e.message, 'err'); }
+  $('edS').disabled = false;
+};
+async function removeItem(v, btn) {
+  if (!await confirmBox('حذف "' + v.title + '"؟', 'هيتحذف من الموقع نهائيًا، ولو ملف مرفوع هيتمسح من المستودع كمان.')) return;
+  btn.disabled = true;
   try {
-    let thumbFail = false;
+    await mutate(a => a.filter(x => x.id !== v.id), 'حذف: ' + v.title);
+    if (DIR[v.type]) await delFile(DIR[v.type] + '/' + v.file);
+    if (v.thumb) await delFile('thumbs/' + v.thumb);
+    toast('تم الحذف ✅', 'ok');
+  } catch (e) { btn.disabled = false; toast(e.message, 'err'); }
+}
+
+/* ---------- add form ---------- */
+Object.keys(KINDS).forEach(k => { const b = document.createElement('button'); b.className = 'a-tab'; b.dataset.k = k; b.innerHTML = '<span></span>' + KINDS[k].label; b.firstChild.textContent = KINDS[k].ico; b.onclick = () => setMode(k); $('tabs').appendChild(b); });
+function setMode(m) {
+  mode = m; const K = KINDS[m], file = !!K.dir, cv = ['video', 'book', 'post'].includes(m);
+  document.querySelectorAll('.a-tab').forEach(b => b.classList.toggle('on', b.dataset.k === m));
+  $('yl').style.display = m === 'yt' ? '' : 'none'; $('ab').style.display = m === 'post' ? '' : 'none'; $('ad').style.display = m === 'post' ? 'none' : '';
+  $('drop').style.display = file ? '' : 'none'; $('cvr').style.display = cv ? '' : 'none';
+  if (file) $('af').accept = Object.keys(K.types).join(',');
+  clearFile(); $('hint').textContent = file ? 'الحد الأقصى 50 ميجا. المسموح: ' + K.hint + (m === 'video' ? '. بيتاخد ثامنيل تلقائي من الفيديو.' : '.') : m === 'yt' ? 'الثامنيل بيتجاب من يوتيوب تلقائيًا.' : 'اكتب المنشور كامل، وهيتفتح للزوار في نافذة قراءة.';
+}
+function clearFile() { $('af').value = ''; $('dropT').textContent = 'اسحب الملف هنا أو اضغط للاختيار'; $('dropS').textContent = ''; $('dprev').hidden = true; }
+function showFile() {
+  const f = $('af').files[0]; if (!f) return clearFile();
+  $('dropT').textContent = f.name; $('dropS').textContent = size(f.size) + (f.size > MAX ? ' — أكبر من 50MB!' : '');
+  const p = $('dprev'); if (/^image\//.test(f.type)) { p.src = URL.createObjectURL(f); p.hidden = false; } else p.hidden = true;
+}
+$('af').onchange = showFile;
+$('ac').onchange = () => { $('acn').textContent = $('ac').files[0] ? $('ac').files[0].name : ''; };
+const drop = $('drop');
+['dragenter', 'dragover'].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.add('over'); }));
+['dragleave', 'drop'].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.remove('over'); }));
+drop.addEventListener('drop', e => { if (e.dataTransfer.files.length) { try { $('af').files = e.dataTransfer.files; showFile(); } catch (x) {} } });
+
+$('up').onclick = async () => {
+  if (!cfg().token) { $('setM').classList.add('open'); return toast('احفظ إعدادات GitHub الأول', 'err'); }
+  const title = $('at').value.trim(); if (!title) return toast('اكتب العنوان', 'err');
+  const item = { id: Math.random().toString(36).slice(2, 10), title, description: $('ad').value.trim(), date: Date.now() };
+  let thumbFail = false;
+  busy(true, 'جاري التجهيز...');
+  try {
     const K = KINDS[mode], cover = $('ac').files[0];
     if (cover && !IMG[cover.type]) throw new Error('صورة الغلاف لازم jpg أو png أو webp');
     if (cover && cover.size > MAX) throw new Error('صورة الغلاف أكبر من 50 ميجا');
@@ -161,20 +344,23 @@ $('up').onclick = async () => {
       item.type = 'post'; item.body = b; delete item.description;
     } else {
       const f = $('af').files[0]; if (!f) throw new Error('اختار ملف');
-      const ext = K.types[f.type]; if (!ext) throw new Error('نوع الملف غير مدعوم هنا');
+      const ext = K.types[f.type]; if (!ext) throw new Error('نوع الملف غير مدعوم هنا (المسموح: ' + K.hint + ')');
       if (f.size > MAX) throw new Error('الملف أكبر من 50 ميجا');
-      say('جاري الرفع... ممكن ياخد وقت ⏳');
+      busy(true, '⏳ جاري رفع الملف (' + size(f.size) + ')... متقفلش الصفحة');
       item.file = await putBlob(K.dir, f, ext); item.type = K.type;
-      if (mode === 'video' && !cover) { say('جاري أخذ ثامنيل من الفيديو...'); const fb = await frameThumb(f); if (fb) item.thumb = await putBlob('thumbs', fb, 'jpg'); else thumbFail = true; }
+      if (mode === 'video' && !cover) { busy(true, 'جاري أخذ ثامنيل من الفيديو...'); const fb = await frameThumb(f); if (fb) item.thumb = await putBlob('thumbs', fb, 'jpg'); else thumbFail = true; }
     }
-    if (cover && mode !== 'yt') { say('جاري رفع الغلاف...'); item.thumb = await putBlob('thumbs', cover, IMG[cover.type]); }
-    const n = await mutate(a => [item, ...a], 'إضافة: ' + title);
-    render(n); $('at').value = ''; $('ad').value = ''; $('yl').value = ''; $('af').value = ''; $('ac').value = ''; $('ab').value = '';
-    say('تمت الإضافة ✅ (هيظهر على الموقع خلال دقيقة تقريبًا)' + (thumbFail ? ' — المتصفح معرفش ياخد لقطة من الفيديو ده، فالموقع هيولّد الثامنيل تلقائيًا، أو ارفع غلاف بإيدك.' : ''));
-  } catch (e) { say(e.message || 'حصل خطأ'); }
-  $('up').disabled = false;
+    if (cover && mode !== 'yt') { busy(true, 'جاري رفع الغلاف...'); item.thumb = await putBlob('thumbs', cover, IMG[cover.type]); }
+    busy(true, 'جاري النشر...');
+    await mutate(a => [item, ...a], 'إضافة: ' + title);
+    ['at', 'ad', 'yl', 'ab', 'ac'].forEach(i => $(i).value = ''); $('acn').textContent = ''; clearFile();
+    toast('تمت الإضافة ✅ هتظهر على الموقع بعد حوالي دقيقة' + (thumbFail ? ' (الثامنيل هيتولّد تلقائيًا على الموقع)' : ''), 'ok');
+    busy(false, '');
+  } catch (e) { busy(false, ''); toast(e.message || 'حصل خطأ', 'err'); }
 };
-loadCfg(); setMode('yt'); refresh();
+
+document.addEventListener('keydown', e => { if (e.key === 'Escape') document.querySelectorAll('.a-modal.open').forEach(m => { if (m.id !== 'cfM') m.classList.remove('open'); }); });
+setMode('yt'); renderAll(); refresh();
 </script>
 </body>
 </html>
