@@ -26,6 +26,9 @@
   <div class="f">
     <input id="yl" placeholder="اللينك">
     <input type="file" id="af" style="display:none">
+    <textarea id="ab" rows="8" maxlength="20000" placeholder="اكتب المنشور هنا (ممكن يكون طويل)" style="display:none"></textarea>
+    <p class="hint" id="chh" style="display:none">صورة الغلاف / الثامنيل (اختياري). للفيديو لو سبتها فاضية بتتاخد لقطة من الفيديو تلقائياً.</p>
+    <input type="file" id="ac" accept="image/jpeg,image/png,image/webp" style="display:none">
     <p class="hint" id="fh" style="display:none">الحد الأقصى المناسب 50 ميجا للملف. للفيديوهات الأكبر استخدم يوتيوب.</p>
     <input id="at" placeholder="عنوان الفيديو" maxlength="120">
     <textarea id="ad" rows="2" placeholder="وصف الفيديو" maxlength="300"></textarea>
@@ -44,10 +47,10 @@ const KINDS = {
   video: { label: '🎬 فيديو', dir: 'videos', type: 'file', types: { 'video/mp4': 'mp4', 'video/webm': 'webm' } },
   image: { label: '🖼️ صورة', dir: 'images', type: 'image', types: IMG },
   book: { label: '📚 كتاب PDF', dir: 'books', type: 'book', types: { 'application/pdf': 'pdf' } },
-  link: { label: '🔗 منشور', ph: 'لينك المنشور (فيسبوك، إنستجرام، تليجرام...)' }
+  post: { label: '📝 منشور' }
 };
 const DIR = { file: 'videos', image: 'images', book: 'books' };
-const ICO = { youtube: '▶️', file: '🎬', image: '🖼️', book: '📚', link: '🔗' };
+const ICO = { youtube: '▶️', file: '🎬', image: '🖼️', book: '📚', link: '🔗', post: '📝' };
 const cfg = () => { try { return JSON.parse(localStorage.getItem('vt-gh') || '{}'); } catch (e) { return {}; } };
 const say = t => $('am').textContent = t;
 function loadCfg() { const c = cfg(); $('co').value = c.owner || ''; $('cr').value = c.repo || ''; $('cb').value = c.branch || 'main'; $('ct').value = c.token || ''; $('set').open = !c.token; }
@@ -62,6 +65,7 @@ function setMode(m) {
   document.querySelectorAll('.tab').forEach(b => b.classList.toggle('on', b.dataset.k === m));
   $('yl').style.display = K.dir ? 'none' : ''; $('yl').placeholder = K.ph || '';
   $('af').style.display = K.dir ? '' : 'none'; $('fh').style.display = K.dir ? '' : 'none';
+  const cv = ['video', 'book', 'post'].includes(m); $('ab').style.display = m === 'post' ? '' : 'none'; $('ac').style.display = cv ? '' : 'none'; $('chh').style.display = cv ? '' : 'none';
   if (K.dir) $('af').accept = Object.keys(K.types).join(',');
 }
 Object.keys(KINDS).forEach(k => { const b = document.createElement('button'); b.className = 'tab'; b.dataset.k = k; b.textContent = KINDS[k].label; b.onclick = () => setMode(k); $('tabs').appendChild(b); });
@@ -86,6 +90,22 @@ async function mutate(fn, msg) {
     catch (e) { if (e.status !== 409 && e.status !== 422 || i) throw e; }
   }
 }
+const toB64 = b => new Promise((res, rej) => { const r = new FileReader(); r.onload = () => res(r.result.split(',')[1]); r.onerror = rej; r.readAsDataURL(b); });
+async function putBlob(dir, blob, ext) {
+  const name = Date.now().toString(36) + Math.random().toString(36).slice(2, 6) + '.' + ext;
+  await gh('PUT', dir + '/' + name, { message: 'upload ' + name, content: await toB64(blob), branch: cfg().branch });
+  return name;
+}
+function frameThumb(f) {
+  return new Promise(res => {
+    const v = document.createElement('video'), u = URL.createObjectURL(f);
+    v.preload = 'metadata'; v.muted = true; v.playsInline = true; v.src = u;
+    const done = b => { URL.revokeObjectURL(u); res(b); };
+    v.onloadedmetadata = () => { v.currentTime = Math.min(1, (v.duration || 2) / 2); };
+    v.onseeked = () => { try { const w = Math.min(v.videoWidth, 960), h = Math.round(v.videoHeight * w / v.videoWidth), c = document.createElement('canvas'); c.width = w; c.height = h; c.getContext('2d').drawImage(v, 0, 0, w, h); c.toBlob(b => done(b), 'image/jpeg', .8); } catch (e) { done(null); } };
+    v.onerror = () => done(null); setTimeout(() => done(null), 8000);
+  });
+}
 const ytId = u => { const m = u.match(/(?:youtu\.be\/|v=|shorts\/|embed\/|live\/)([A-Za-z0-9_-]{11})/); return m ? m[1] : null; };
 
 async function refresh() {
@@ -105,6 +125,7 @@ function render(list) {
       try {
         const n = await mutate(a => a.filter(x => x.id !== v.id), 'حذف: ' + v.title);
         if (DIR[v.type]) { try { const p = DIR[v.type] + '/' + v.file, f = await gh('GET', p); await gh('DELETE', p, { message: 'delete ' + v.file, sha: f.sha, branch: cfg().branch }); } catch (e) {} }
+        if (v.thumb) { try { const p = 'thumbs/' + v.thumb, f = await gh('GET', p); await gh('DELETE', p, { message: 'delete ' + v.thumb, sha: f.sha, branch: cfg().branch }); } catch (e) {} }
         render(n); say('تم الحذف ✅ (الموقع بيتحدث خلال دقيقة تقريبًا)');
       } catch (e) { b.disabled = false; say(e.message); }
     };
@@ -117,25 +138,26 @@ $('up').onclick = async () => {
   const item = { id: Math.random().toString(36).slice(2, 10), title, description: $('ad').value.trim(), date: Date.now() };
   $('up').disabled = true;
   try {
-    const K = KINDS[mode];
+    const K = KINDS[mode], cover = $('ac').files[0];
+    if (cover && !IMG[cover.type]) throw new Error('صورة الغلاف لازم jpg أو png أو webp');
+    if (cover && cover.size > MAX) throw new Error('صورة الغلاف أكبر من 50 ميجا');
     if (mode === 'yt') {
       const id = ytId($('yl').value.trim()); if (!id) throw new Error('لينك يوتيوب غير صحيح');
       item.type = 'youtube'; item.yt = id;
-    } else if (mode === 'link') {
-      const u = $('yl').value.trim(); if (!/^https?:\/\/\S+$/i.test(u)) throw new Error('اللينك لازم يبدأ بـ http:// أو https://');
-      item.type = 'link'; item.url = u;
+    } else if (mode === 'post') {
+      const b = $('ab').value.trim(); if (!b) throw new Error('اكتب نص المنشور');
+      item.type = 'post'; item.body = b; delete item.description;
     } else {
       const f = $('af').files[0]; if (!f) throw new Error('اختار ملف');
       const ext = K.types[f.type]; if (!ext) throw new Error('نوع الملف غير مدعوم هنا');
       if (f.size > MAX) throw new Error('الملف أكبر من 50 ميجا');
       say('جاري الرفع... ممكن ياخد وقت ⏳');
-      const b64 = await new Promise((res, rej) => { const r = new FileReader(); r.onload = () => res(r.result.split(',')[1]); r.onerror = rej; r.readAsDataURL(f); });
-      const name = Date.now().toString(36) + Math.random().toString(36).slice(2, 6) + '.' + ext;
-      await gh('PUT', K.dir + '/' + name, { message: 'upload ' + name, content: b64, branch: cfg().branch });
-      item.type = K.type; item.file = name;
+      item.file = await putBlob(K.dir, f, ext); item.type = K.type;
+      if (mode === 'video' && !cover) { const fb = await frameThumb(f); if (fb) item.thumb = await putBlob('thumbs', fb, 'jpg'); }
     }
+    if (cover && mode !== 'yt') { say('جاري رفع الغلاف...'); item.thumb = await putBlob('thumbs', cover, IMG[cover.type]); }
     const n = await mutate(a => [item, ...a], 'إضافة: ' + title);
-    render(n); $('at').value = ''; $('ad').value = ''; $('yl').value = ''; $('af').value = '';
+    render(n); $('at').value = ''; $('ad').value = ''; $('yl').value = ''; $('af').value = ''; $('ac').value = ''; $('ab').value = '';
     say('تمت الإضافة ✅ (هيظهر على الموقع خلال دقيقة تقريبًا)');
   } catch (e) { say(e.message || 'حصل خطأ'); }
   $('up').disabled = false;
