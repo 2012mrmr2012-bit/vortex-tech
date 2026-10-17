@@ -1,175 +1,91 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vortex Tech - معرض الفيديوهات</title>
-    <link href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@400;700&display=swap" rel="stylesheet">
-    <style>
-        /* 1. تعريف المتغيرات للألوان */
-        :root {
-            --bg-color: #121212;
-            --text-color: #ffffff;
-            --card-bg: #1e1e1e;
-        }
-
-        [data-theme="light"] {
-            --bg-color: #ffffff;
-            --text-color: #121212;
-            --card-bg: #f0f0f0;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: 'Aref Ruqaa', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            padding: 20px;
-            transition: 0.3s;
-        }
-
-        header { text-align: center; margin-bottom: 30px; padding: 20px; }
-        
-        h1 {
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-            background: linear-gradient(90deg,#F0F8FF,#0000FF);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        /* تنسيق الأزرار */
-        .social-buttons {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 15px;
-            margin-top: 20px;
-            flex-wrap: wrap;
-        }
-
-        .btn {
-            display: inline-block;
-            padding: 12px 25px;
-            border-radius: 50px;
-            text-decoration: none;
-            color: white !important;
-            font-weight: bold;
-            font-size: 1.1rem;
-            transition: all 0.3s ease;
-            border: none;
-            cursor: pointer;
-        }
-
-        .subscribe-btn { background-color: #ff0000; box-shadow: 0 4px 15px rgba(255, 0, 0, 0.4); }
-        .instagram-btn { background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #bc1888); box-shadow: 0 4px 15px rgba(188, 24, 136, 0.3); }
-        .facebook-btn { background-color: #1877F2; box-shadow: 0 4px 15px rgba(24, 119, 242, 0.4); }
-        .telegram-btn { background-color: #0088cc; box-shadow: 0 4px 15px rgba(0, 136, 204, 0.3); }
-
-        .btn:hover { transform: translateY(-3px); filter: brightness(1.1); }
-
-        /* زر اللايت والدارك العائم */
-        .theme-toggle {
-            position: fixed;
-            bottom: 20px;
-            left: 20px;
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            background: #0000FF;
-            color: white;
-            border: none;
-            cursor: pointer;
-            font-size: 1.5rem;
-            z-index: 1000;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-        }
-
-        /* تنسيق الكروت */
-        .video-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 25px;
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-        
-        .video-card {
-            background: var(--card-bg);
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
-            transition: 0.3s;
-        }
-        
-        .video-player { width: 100%; aspect-ratio: 16/9; background: #000; }
-        .video-info { padding: 15px; }
-        .video-title { font-size: 1.2rem; margin-bottom: 8px; color: var(--text-color); }
-        .video-description { color: #aaa; font-size: 0.95rem; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vortex Tech - معرض الفيديوهات</title>
+<link href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
 </head>
-<body id="mainBody">
-
-    <button class="theme-toggle" id="modeBtn">🌓</button>
-
-    <header>
-        <h1>معلومات تقنيه حصريه لجميع الاجهزه</h1>
-        <p>Click on any video to play</p>
-        
-        <div class="social-buttons">
-           <a href="https://www.youtube.com/@vo3tex-tech?sub_confirmation=1" target="_blank" class="btn subscribe-btn"> إشترك في القناة ❤️</a>
-            <a href="https://www.instagram.com/vo3tex_tech" target="_blank" class="btn instagram-btn">تابعنا علي إنستجرام 📸</a>
-            <a href="https://www.facebook.com/share/17V6PMbSnh/" target="_blank" class="btn facebook-btn">تابعنا علي فيسبوك🔵</a>
-            <a href="https://t.me/vo3textech" target="_blank" class="btn telegram-btn">تابعنا علي تليجرام ✈️</a>
-        </div>
-    </header>
-
-    <main class="video-container" id="videoContainer"></main>
-
-    <script>
-        const videos = [
-            { src: "Sequence 01.mp4", title: "تهكير الويندوز", description: "شرح كامل لطرق الحماية" },
-            { src: "Sequence 01_2 (1).mp4", title: "تهكير العاب وبرامج", description: "كواليس تعديل البرامج" },
-            { src: "Sequence 01_1.mp4", title: "تنظيم ملفات الكمبيوتر", description: "أفضل طريقة للترتيب" }
-        ];
-
-        // إنشاء كروت الفيديوهات
-        function createVideoCards() {
-            const container = document.getElementById('videoContainer');
-            videos.forEach(video => {
-                const card = document.createElement('div');
-                card.className = 'video-card';
-                card.innerHTML = `
-                    <video class="video-player" controls><source src="${video.src}" type="video/mp4"></video>
-                    <div class="video-info">
-                        <h3 class="video-title">${video.title}</h3>
-                        <p class="video-description">${video.description}</p>
-                    </div>`;
-                container.appendChild(card);
-            });
-        }
-        createVideoCards();
-
-        // كود تشغيل اللايت والدارك مود
-        const modeBtn = document.getElementById('modeBtn');
-        const body = document.getElementById('mainBody');
-
-        modeBtn.addEventListener('click', () => {
-            if (body.getAttribute('data-theme') === 'light') {
-                body.removeAttribute('data-theme');
-                modeBtn.innerText = '🌓';
-            } else {
-                body.setAttribute('data-theme', 'light');
-                modeBtn.innerText = '🌙';
-            }
-        });
-    </script>
+<body>
+<div class="orb o1"></div><div class="orb o2"></div>
+<div class="wrap">
+  <header>
+    <div class="logo">VORTEX TECH</div>
+    <h1>معلومات تقنية حصرية لجميع الأجهزة</h1>
+    <p class="sub">اضغط على أي فيديو لمشاهدته</p>
+    <div class="social">
+      <a class="btn yt" target="_blank" rel="noopener" href="https://www.youtube.com/@vo3tex-tech?sub_confirmation=1">إشترك في القناة ❤️</a>
+      <a class="btn ig" target="_blank" rel="noopener" href="https://www.instagram.com/vo3tex_tech">تابعنا على إنستجرام 📸</a>
+      <a class="btn fb" target="_blank" rel="noopener" href="https://www.facebook.com/share/17V6PMbSnh/">تابعنا على فيسبوك 🔵</a>
+      <a class="btn tg" target="_blank" rel="noopener" href="https://t.me/vo3textech">تابعنا على تليجرام ✈️</a>
+    </div>
+  </header>
+  <div class="bar"><input class="search" id="q" placeholder="🔍 ابحث عن فيديو..."><span class="count" id="cnt"></span></div>
+  <div class="chips" id="chips"></div>
+  <main class="grid" id="grid"></main>
+</div>
+<button class="fab" id="modeBtn" title="الوضع">🌓</button>
+<div class="modal" id="player"><div class="box"><button class="x" id="px">✕</button><div id="pm"></div><div class="info"><h3 id="pt"></h3><p id="pd"></p></div></div></div>
+<script>
+const $ = id => document.getElementById(id);
+let videos = [], cat = 'all';
+const GROUPS = { all: 'الكل', video: '🎬 فيديو', image: '🖼️ صور', book: '📚 كتب', link: '🔗 منشورات' };
+const grp = v => v.type === 'youtube' || v.type === 'file' ? 'video' : v.type;
+const BADGE = { video: 'فيديو', image: 'صورة', book: 'كتاب', link: 'منشور' };
+const ICON = { facebook: '🔵', instagram: '📸', telegram: '✈️', t: '✈️', twitter: '🐦', x: '✖️', tiktok: '🎵', youtube: '▶️', youtu: '▶️', linkedin: '💼' };
+const safe = u => /^https?:\/\//i.test(u || '');
+const host = u => { try { return new URL(u).hostname.replace(/^www\./, ''); } catch (e) { return ''; } };
+const icon = u => { const p = host(u).split('.'); return ICON[p[p.length - 2]] || ICON[p[0]] || '🔗'; };
+function chips() {
+  const c = $('chips'); c.innerHTML = '';
+  Object.keys(GROUPS).forEach(k => {
+    if (k !== 'all' && !videos.some(v => grp(v) === k)) return;
+    const b = document.createElement('button'); b.className = 'chip' + (cat === k ? ' on' : ''); b.textContent = GROUPS[k];
+    b.onclick = () => { cat = k; chips(); render(); }; c.appendChild(b);
+  });
+}
+function render() {
+  const term = $('q').value.trim().toLowerCase(), g = $('grid'); g.innerHTML = '';
+  const list = videos.filter(v => (cat === 'all' || grp(v) === cat) && (v.title + ' ' + (v.description || '')).toLowerCase().includes(term));
+  $('cnt').textContent = videos.length + ' عنصر';
+  if (!list.length) { const e = document.createElement('div'); e.className = 'empty'; e.textContent = videos.length ? 'مفيش نتائج مطابقة' : 'مفيش محتوى لسه'; g.appendChild(e); return; }
+  const io = new IntersectionObserver(es => es.forEach(x => { if (x.isIntersecting) { x.target.classList.add('in'); io.unobserve(x.target); } }), { threshold: .1 });
+  list.forEach((v, i) => {
+    const c = document.createElement('div'); c.className = 'card'; c.style.transitionDelay = (i % 6) * 80 + 'ms';
+    c.innerHTML = '<div class="thumb"><span class="badge"></span></div><div class="info"><h3></h3><p></p></div>';
+    const t = c.querySelector('.thumb'); c.querySelector('.badge').textContent = BADGE[grp(v)] || '';
+    const playIcon = '<div class="play"><span>▶</span></div>';
+    if (v.type === 'youtube') { const im = document.createElement('img'); im.loading = 'lazy'; im.alt = ''; im.src = 'https://i.ytimg.com/vi/' + encodeURIComponent(v.yt) + '/hqdefault.jpg'; t.appendChild(im); t.insertAdjacentHTML('beforeend', playIcon); }
+    else if (v.type === 'file') { const vd = document.createElement('video'); vd.preload = 'metadata'; vd.muted = true; vd.playsInline = true; vd.src = 'videos/' + encodeURIComponent(v.file) + '#t=0.5'; t.appendChild(vd); t.insertAdjacentHTML('beforeend', playIcon); }
+    else if (v.type === 'image') { const im = document.createElement('img'); im.loading = 'lazy'; im.alt = v.title; im.src = 'images/' + encodeURIComponent(v.file); t.appendChild(im); }
+    else if (v.type === 'book') { const d = document.createElement('div'); d.className = 'cover bk'; d.innerHTML = '📚<small>PDF</small>'; t.appendChild(d); }
+    else { const d = document.createElement('div'); d.className = 'cover ln'; d.innerHTML = '<span></span><small></small>'; d.firstChild.textContent = icon(v.url); d.lastChild.textContent = host(v.url); t.appendChild(d); }
+    c.querySelector('h3').textContent = v.title; c.querySelector('p').textContent = v.description || '';
+    c.onclick = () => open_(v); g.appendChild(c); io.observe(c);
+  });
+}
+function open_(v) {
+  if (v.type === 'book') return void window.open('books/' + encodeURIComponent(v.file), '_blank', 'noopener');
+  if (v.type === 'link') return void (safe(v.url) && window.open(v.url, '_blank', 'noopener,noreferrer'));
+  openPlayer(v);
+}
+function openPlayer(v) {
+  const m = $('pm'); m.innerHTML = '';
+  if (v.type === 'youtube') { const f = document.createElement('iframe'); f.allow = 'autoplay; fullscreen; picture-in-picture'; f.allowFullscreen = true; f.src = 'https://www.youtube-nocookie.com/embed/' + encodeURIComponent(v.yt) + '?autoplay=1&rel=0'; m.appendChild(f); }
+  else if (v.type === 'image') { const im = document.createElement('img'); im.className = 'full'; im.alt = v.title; im.src = 'images/' + encodeURIComponent(v.file); m.appendChild(im); }
+  else { const p = document.createElement('video'); p.controls = true; p.playsInline = true; p.autoplay = true; p.src = 'videos/' + encodeURIComponent(v.file); m.appendChild(p); }
+  $('pt').textContent = v.title; $('pd').textContent = v.description || ''; $('player').classList.add('open');
+}
+function closePlayer() { $('pm').innerHTML = ''; $('player').classList.remove('open'); }
+$('px').onclick = closePlayer;
+$('player').onclick = e => { if (e.target.id === 'player') closePlayer(); };
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closePlayer(); });
+$('q').oninput = render;
+const root = document.documentElement;
+try { const t = localStorage.getItem('vt-theme'); if (t) root.setAttribute('data-theme', t); } catch (e) {}
+$('modeBtn').onclick = () => { const n = root.getAttribute('data-theme') === 'light' ? 'dark' : 'light'; root.setAttribute('data-theme', n); try { localStorage.setItem('vt-theme', n); } catch (e) {} };
+fetch('videos.json?t=' + Date.now()).then(r => r.json()).then(v => { videos = v; chips(); render(); }).catch(render);
+</script>
 </body>
 </html>
-
-

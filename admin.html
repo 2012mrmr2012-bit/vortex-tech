@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>لوحة الأدمن - Vortex Tech</title>
+<link href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="orb o1"></div><div class="orb o2"></div>
+<div class="panel">
+  <div class="top"><h2>⚙️ لوحة الأدمن</h2><a class="link" href="index.html">الموقع</a></div>
+  <details id="set" open>
+    <summary>🔑 إعدادات GitHub (مرة واحدة)</summary>
+    <div class="f">
+      <input id="co" placeholder="اسم حسابك على GitHub (owner)">
+      <input id="cr" placeholder="اسم المستودع (repo)">
+      <input id="cb" placeholder="الفرع (branch)" value="main">
+      <input id="ct" type="password" placeholder="التوكن الشخصي (Token)">
+      <button class="btn tg" id="sv" style="justify-content:center">حفظ في المتصفح ده فقط</button>
+    </div>
+  </details>
+  <div class="tabs" id="tabs"></div>
+  <div class="f">
+    <input id="yl" placeholder="اللينك">
+    <input type="file" id="af" style="display:none">
+    <p class="hint" id="fh" style="display:none">الحد الأقصى المناسب 50 ميجا للملف. للفيديوهات الأكبر استخدم يوتيوب.</p>
+    <input id="at" placeholder="عنوان الفيديو" maxlength="120">
+    <textarea id="ad" rows="2" placeholder="وصف الفيديو" maxlength="300"></textarea>
+  </div>
+  <button class="btn tg" id="up" style="width:100%;justify-content:center">إضافة</button>
+  <div class="msg" id="am"></div>
+  <div id="list"></div>
+</div>
+<script>
+const $ = id => document.getElementById(id);
+const MAX = 50 * 1024 * 1024;
+let mode = 'yt';
+const IMG = { 'image/jpeg': 'jpg', 'image/png': 'png', 'image/webp': 'webp', 'image/gif': 'gif' };
+const KINDS = {
+  yt: { label: '▶️ يوتيوب', ph: 'لينك فيديو يوتيوب' },
+  video: { label: '🎬 فيديو', dir: 'videos', type: 'file', types: { 'video/mp4': 'mp4', 'video/webm': 'webm' } },
+  image: { label: '🖼️ صورة', dir: 'images', type: 'image', types: IMG },
+  book: { label: '📚 كتاب PDF', dir: 'books', type: 'book', types: { 'application/pdf': 'pdf' } },
+  link: { label: '🔗 منشور', ph: 'لينك المنشور (فيسبوك، إنستجرام، تليجرام...)' }
+};
+const DIR = { file: 'videos', image: 'images', book: 'books' };
+const ICO = { youtube: '▶️', file: '🎬', image: '🖼️', book: '📚', link: '🔗' };
+const cfg = () => { try { return JSON.parse(localStorage.getItem('vt-gh') || '{}'); } catch (e) { return {}; } };
+const say = t => $('am').textContent = t;
+function loadCfg() { const c = cfg(); $('co').value = c.owner || ''; $('cr').value = c.repo || ''; $('cb').value = c.branch || 'main'; $('ct').value = c.token || ''; $('set').open = !c.token; }
+$('sv').onclick = () => {
+  const c = { owner: $('co').value.trim(), repo: $('cr').value.trim(), branch: $('cb').value.trim() || 'main', token: $('ct').value.trim() };
+  if (!c.owner || !c.repo || !c.token) return say('كمّل كل البيانات.');
+  try { localStorage.setItem('vt-gh', JSON.stringify(c)); } catch (e) { return say('المتصفح منع الحفظ.'); }
+  say('تم الحفظ ✅'); $('set').open = false; refresh();
+};
+function setMode(m) {
+  mode = m; const K = KINDS[m];
+  document.querySelectorAll('.tab').forEach(b => b.classList.toggle('on', b.dataset.k === m));
+  $('yl').style.display = K.dir ? 'none' : ''; $('yl').placeholder = K.ph || '';
+  $('af').style.display = K.dir ? '' : 'none'; $('fh').style.display = K.dir ? '' : 'none';
+  if (K.dir) $('af').accept = Object.keys(K.types).join(',');
+}
+Object.keys(KINDS).forEach(k => { const b = document.createElement('button'); b.className = 'tab'; b.dataset.k = k; b.textContent = KINDS[k].label; b.onclick = () => setMode(k); $('tabs').appendChild(b); });
+
+async function gh(method, path, body) {
+  const c = cfg();
+  const url = `https://api.github.com/repos/${c.owner}/${c.repo}/contents/${path}` + (method === 'GET' ? `?ref=${encodeURIComponent(c.branch)}&t=${Date.now()}` : '');
+  const r = await fetch(url, { method, headers: { Authorization: 'Bearer ' + c.token, Accept: 'application/vnd.github+json' }, body: body ? JSON.stringify(body) : undefined });
+  const d = await r.json().catch(() => ({}));
+  if (!r.ok) { const e = new Error(r.status === 401 ? 'التوكن غلط أو منتهي' : r.status === 404 && method !== 'GET' ? 'المستودع أو الفرع مش موجود، أو التوكن ملوش صلاحية Contents' : (d.message || r.status)); e.status = r.status; throw e; }
+  return d;
+}
+const utf8b64 = s => btoa(Array.from(new TextEncoder().encode(s), b => String.fromCharCode(b)).join(''));
+async function getList() {
+  try { const d = await gh('GET', 'videos.json'); const t = new TextDecoder().decode(Uint8Array.from(atob(d.content.replace(/\n/g, '')), c => c.charCodeAt(0))); return { sha: d.sha, list: JSON.parse(t) }; }
+  catch (e) { if (e.status === 404) return { list: [] }; throw e; }
+}
+async function mutate(fn, msg) {
+  for (let i = 0; i < 2; i++) {
+    const { sha, list } = await getList(), next = fn(list);
+    try { await gh('PUT', 'videos.json', { message: msg, content: utf8b64(JSON.stringify(next, null, 1)), branch: cfg().branch, ...(sha ? { sha } : {}) }); return next; }
+    catch (e) { if (e.status !== 409 && e.status !== 422 || i) throw e; }
+  }
+}
+const ytId = u => { const m = u.match(/(?:youtu\.be\/|v=|shorts\/|embed\/|live\/)([A-Za-z0-9_-]{11})/); return m ? m[1] : null; };
+
+async function refresh() {
+  const l = $('list'); l.innerHTML = '';
+  if (!cfg().token) return;
+  try { const { list } = await getList(); render(list); } catch (e) { say(e.message); }
+}
+function render(list) {
+  const l = $('list'); l.innerHTML = '';
+  list.forEach(v => {
+    const r = document.createElement('div'); r.className = 'row';
+    const s = document.createElement('span'); s.textContent = (ICO[v.type] || '📄') + ' ' + v.title;
+    const b = document.createElement('button'); b.className = 'del'; b.textContent = 'حذف';
+    b.onclick = async () => {
+      if (!confirm('تحذف "' + v.title + '"؟')) return;
+      b.disabled = true; say('جاري الحذف...');
+      try {
+        const n = await mutate(a => a.filter(x => x.id !== v.id), 'حذف: ' + v.title);
+        if (DIR[v.type]) { try { const p = DIR[v.type] + '/' + v.file, f = await gh('GET', p); await gh('DELETE', p, { message: 'delete ' + v.file, sha: f.sha, branch: cfg().branch }); } catch (e) {} }
+        render(n); say('تم الحذف ✅ (الموقع بيتحدث خلال دقيقة تقريبًا)');
+      } catch (e) { b.disabled = false; say(e.message); }
+    };
+    r.append(s, b); l.appendChild(r);
+  });
+}
+$('up').onclick = async () => {
+  if (!cfg().token) return say('احفظ إعدادات GitHub الأول.');
+  const title = $('at').value.trim(); if (!title) return say('اكتب عنوان.');
+  const item = { id: Math.random().toString(36).slice(2, 10), title, description: $('ad').value.trim(), date: Date.now() };
+  $('up').disabled = true;
+  try {
+    const K = KINDS[mode];
+    if (mode === 'yt') {
+      const id = ytId($('yl').value.trim()); if (!id) throw new Error('لينك يوتيوب غير صحيح');
+      item.type = 'youtube'; item.yt = id;
+    } else if (mode === 'link') {
+      const u = $('yl').value.trim(); if (!/^https?:\/\/\S+$/i.test(u)) throw new Error('اللينك لازم يبدأ بـ http:// أو https://');
+      item.type = 'link'; item.url = u;
+    } else {
+      const f = $('af').files[0]; if (!f) throw new Error('اختار ملف');
+      const ext = K.types[f.type]; if (!ext) throw new Error('نوع الملف غير مدعوم هنا');
+      if (f.size > MAX) throw new Error('الملف أكبر من 50 ميجا');
+      say('جاري الرفع... ممكن ياخد وقت ⏳');
+      const b64 = await new Promise((res, rej) => { const r = new FileReader(); r.onload = () => res(r.result.split(',')[1]); r.onerror = rej; r.readAsDataURL(f); });
+      const name = Date.now().toString(36) + Math.random().toString(36).slice(2, 6) + '.' + ext;
+      await gh('PUT', K.dir + '/' + name, { message: 'upload ' + name, content: b64, branch: cfg().branch });
+      item.type = K.type; item.file = name;
+    }
+    const n = await mutate(a => [item, ...a], 'إضافة: ' + title);
+    render(n); $('at').value = ''; $('ad').value = ''; $('yl').value = ''; $('af').value = '';
+    say('تمت الإضافة ✅ (هيظهر على الموقع خلال دقيقة تقريبًا)');
+  } catch (e) { say(e.message || 'حصل خطأ'); }
+  $('up').disabled = false;
+};
+loadCfg(); setMode('yt'); refresh();
+</script>
+</body>
+</html>
